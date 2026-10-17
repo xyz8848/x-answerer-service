@@ -1,0 +1,11 @@
+node_modules
+build
+.env
+.env.local
+.workbuddy
+.git
+.gitignore
+temp
+README.md
+Dockerfile
+docker-compose.yml

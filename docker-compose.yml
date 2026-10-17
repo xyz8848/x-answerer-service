@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: xas
+      POSTGRES_PASSWORD: xas
+      POSTGRES_DB: xas
+    volumes:
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U xas -d xas"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  app:
+    image: ghcr.io/xyz8848/x-answerer-service:latest
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://xas:xas@db:5432/xas?schema=public
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:

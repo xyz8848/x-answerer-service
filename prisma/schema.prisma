@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===========================================
+// 用户
+// ===========================================
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  passwordHash String?
+  role         Role      @default(USER)
+  isActive     Boolean   @default(true)
+  passkeys     Passkey[]
+  apiKeys      ApiKey[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("users")
+}
+
+// ===========================================
+// API Key（搜题接口鉴权令牌）
+// ===========================================
+model ApiKey {
+  id         String    @id @default(uuid())
+  key        String    @unique
+  name       String    @default("")
+  userId     Int
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lastUsedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@map("api_keys")
+}
+
+// ===========================================
+// Passkey (WebAuthn)
+// ===========================================
+model Passkey {
+  id           String   @id @default(uuid())
+  userId       Int
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  credentialId String   @unique
+  publicKey    Bytes
+  counter      Int
+  deviceName   String?
+  createdAt    DateTime @default(now())
+
+  @@map("passkeys")
+}
+
+// ===========================================
+// 题目
+// ===========================================
+model Question {
+  id        String         @id @default(uuid())
+  type      QuestionType
+  title     String
+  options   Json           @default("[]")
+  answer    Json           @default("[]")
+  status    QuestionStatus @default(PENDING)
+  source    String?
+  tags      String[]
+  answeredBy String?
+  answeredAt DateTime?
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@map("questions")
+}
+
+// ===========================================
+// 系统配置
+// ===========================================
+model SystemConfig {
+  id    String @id @default(uuid())
+  key   String @unique
+  value String
+
+  @@map("system_configs")
+}
+
+// ===========================================
+// 枚举
+// ===========================================
+enum Role {
+  USER
+  ADMIN
+  OWNER
+}
+
+enum QuestionType {
+  SINGLE
+  MULTIPLE
+  JUDGE
+  FILL
+  SHORT_ANSWER
+}
+
+enum QuestionStatus {
+  PENDING
+  ANSWERED
+  VERIFIED
+  REJECTED
+}
