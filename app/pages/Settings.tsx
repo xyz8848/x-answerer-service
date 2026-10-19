@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useBlocker } from 'react-router';
-import { Eye, EyeOff, GripVertical, Pencil, Plus, Trash2, X } from 'lucide-react';
+import { ExternalLink, Eye, EyeOff, Github, GripVertical, Pencil, Plus, Trash2, X } from 'lucide-react';
 import api from '@/api';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -950,7 +950,12 @@ export default function Settings() {
 
   return (
     <div className="p-8">
-      <h2 className="text-2xl font-bold mb-8">系统设置</h2>
+      <div className="flex items-baseline gap-3 mb-8">
+        <h2 className="text-2xl font-bold">系统设置</h2>
+        <span className="text-sm text-muted-foreground" title="当前部署版本">
+          v{__APP_VERSION__}
+        </span>
+      </div>
 
       {/* 加载状态 */}
       {loading && (
@@ -1772,6 +1777,28 @@ export default function Settings() {
           </Card>
           </div>
         </div>
+      )}
+
+      {/* 关于 */}
+      {!loading && !error && (
+        <Card className="max-w-7xl mx-auto mt-6">
+          <CardContent className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-sm">
+              <span className="font-medium">X Answerer Service</span>
+              <span className="text-muted-foreground">v{__APP_VERSION__}</span>
+            </div>
+            <a
+              href="https://github.com/xyz8848/x-answerer-service"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Github className="size-4" />
+              github.com/xyz8848/x-answerer-service
+              <ExternalLink className="size-3.5" />
+            </a>
+          </CardContent>
+        </Card>
       )}
 
       {/* AI 供应商 创建/修改弹窗 */}
