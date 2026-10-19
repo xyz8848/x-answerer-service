@@ -1180,6 +1180,85 @@ export default function Settings() {
               </div>
             </CardContent>
           </Card>
+
+          {/* 其它题库（弹窗创建/修改，即时持久化） */}
+          <Card>
+            <CardContent>
+              <div className="flex items-center justify-between mb-4 gap-4">
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-lg font-semibold">其它题库</h3>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    本地题库未命中时按顺序查询外部题库接口（OCSJS 格式），命中后自动收录。
+                  </p>
+                </div>
+              </div>
+              {/* 总开关 */}
+              <div className="flex items-center justify-between rounded-lg border px-3 py-2.5 mb-4">
+                <div>
+                  <p className="text-sm">启用其它题库</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    关闭后搜题仅使用本地题库与 AI，批量补全不受影响
+                  </p>
+                </div>
+                <Switch
+                  checked={upstreamEnabled}
+                  disabled={savingUpstreamEnabled}
+                  onCheckedChange={toggleUpstreamEnabled}
+                />
+              </div>
+              {upstreamEnabledError && (
+                <p className="text-sm text-destructive mb-3">{upstreamEnabledError}</p>
+              )}
+              <div className={upstreamEnabled ? '' : 'opacity-50 pointer-events-none'}>
+                {upstreams.length === 0 ? (
+                  <p className="text-xs text-muted-foreground text-center py-4">
+                    暂无题库，点击下方按钮添加
+                  </p>
+                ) : (
+                  <div className="space-y-2">
+                    {upstreams.map((u) => (
+                      <div
+                        key={u.id}
+                        className="flex items-center gap-2 rounded-lg border px-3 py-2"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium truncate">{u.name || '未命名题库'}</p>
+                          <p className="text-xs text-muted-foreground truncate">{u.url}</p>
+                        </div>
+                        <Badge variant="outline" className="shrink-0">
+                          {u.enabled ? '已启用' : '已停用'}
+                        </Badge>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="size-8 shrink-0"
+                          onClick={() => openEditUpstream(u)}
+                        >
+                          <Pencil className="size-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="size-8 shrink-0 text-destructive hover:text-destructive"
+                          onClick={() => askRemoveUpstream(u)}
+                        >
+                          <Trash2 className="size-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <Button
+                  variant="outline"
+                  className="w-full border-dashed mt-3 gap-1.5"
+                  onClick={openCreateUpstream}
+                >
+                  <Plus className="size-4" />
+                  添加题库
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
           </div>
           {/* 右列 */}
           <div className="space-y-6">
