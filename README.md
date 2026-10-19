@@ -1,6 +1,6 @@
 # X Answerer Service (XAS)
 
-一个基于 React Router v7 的全栈题库服务平台，提供题目录入与管理、AI 自动作答、多题库聚合搜题，兼容 OCSJS / TikuAdapter 查题协议。
+一个基于 React Router v8 的全栈题库服务平台，提供题目录入与管理、AI 自动作答、多题库聚合搜题，兼容 OCSJS / TikuAdapter 查题协议。
 
 ## 技术栈
 
@@ -9,7 +9,7 @@ React Router v8 (SSR) · React 19 · Tailwind CSS v4 · Prisma + PostgreSQL · j
 ## 快速开始
 
 ```bash
-# 环境要求：Node.js ≥ 22.9，pnpm ≥ 9，PostgreSQL
+# 环境要求：Node.js ≥ 22.22，pnpm ≥ 9，PostgreSQL
 pnpm install
 
 # 配置环境变量
