@@ -22,8 +22,14 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUserState] = useState<ICurrentUser | null>(null);
+export function AuthProvider({
+  children,
+  initialUser = null,
+}: {
+  children: ReactNode;
+  initialUser?: ICurrentUser | null;
+}) {
+  const [user, setUserState] = useState<ICurrentUser | null>(initialUser);
 
   // 登录态由 httpOnly Cookie 维护，刷新页面后通过 /auth/me 恢复用户信息
   useEffect(() => {

@@ -67,6 +67,8 @@ async function copyText(text: string): Promise<boolean> {
 export default function Home() {
   // window 仅在客户端存在，SSR 期间留空，挂载后再生成配置
   const [apiKey, setApiKey] = useState('');
+  // API Key 是否已加载完成（避免「尚未创建」提示在加载完成前闪现）
+  const [apiKeyLoaded, setApiKeyLoaded] = useState(false);
   const [config, setConfig] = useState('');
   const [copied, setCopied] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -80,12 +82,14 @@ export default function Home() {
           setApiKey(data.data.items[0].key);
         }
       })
-      .catch(() => undefined);
+      .catch(() => undefined)
+      .finally(() => setApiKeyLoaded(true));
   }, []);
 
   useEffect(() => {
+    if (!apiKeyLoaded) return;
     setConfig(buildWrapperConfig(apiKey || '请先在「API 密钥」页创建'));
-  }, [apiKey]);
+  }, [apiKey, apiKeyLoaded]);
 
   async function handleCopy() {
     const ok = await copyText(config);
@@ -108,9 +112,6 @@ export default function Home() {
               <h3 className="text-lg font-semibold">OCSJS 自定义题库</h3>
               <p className="text-sm text-muted-foreground mt-1">
                 生成 OCSJS 网课助手所需的题库配置 JSON，接口地址与你的 API Key 自动填入
-                {!apiKey && (
-                  <span className="text-destructive">（尚未创建 API Key，请先到「API 密钥」页创建）</span>
-                )}
               </p>
             </div>
             <Button onClick={() => setDialogOpen(true)} className="gap-2">
@@ -129,6 +130,13 @@ export default function Home() {
               在 OCSJS 网课助手 设置 → 题库配置 → 自定义题库 中粘贴以下 JSON
             </DialogDescription>
           </DialogHeader>
+
+          {!apiKeyLoaded && <p className="text-sm text-muted-foreground">正在加载 API Key...</p>}
+          {apiKeyLoaded && !apiKey && (
+            <p className="text-sm text-destructive">
+              尚未创建 API Key，配置中的 token 为占位文本。请先到「API 密钥」页创建，再重新打开本弹窗获取有效配置。
+            </p>
+          )}
 
           <pre className="bg-muted rounded-lg p-4 text-sm leading-6 overflow-x-auto max-h-[50vh] overflow-y-auto font-mono">
             {config}
