@@ -4,7 +4,7 @@
 
 ## 技术栈
 
-React Router v7 (SSR) · React 19 · Tailwind CSS v4 · Prisma + PostgreSQL · jose (JWT) · Nodemailer
+React Router v8 (SSR) · React 19 · Tailwind CSS v4 · Prisma + PostgreSQL · jose (JWT) · Nodemailer
 
 ## 快速开始
 

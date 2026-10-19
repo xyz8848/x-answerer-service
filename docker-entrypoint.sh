@@ -19,4 +19,4 @@ echo "🌱 初始化种子数据（幂等，可重复执行）..."
 node node_modules/tsx/dist/cli.mjs prisma/seed.ts
 
 echo "🚀 启动服务..."
-exec node node_modules/@react-router/serve/bin.js ./build/server/index.js
+exec node node_modules/@react-router/serve/bin.cjs ./build/server/index.js
